@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard — Humble Hosting</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+:root{
+    --bg:#07080b;
+    --sidebar:#0c0e13;
+    --card:#10131a;
+    --border:#222733;
+    --text:#f5f7fb;
+    --muted:#8d95a5;
+    --purple:#765cff;
+    --blue:#28cfff;
+    --green:#35d879;
+    --red:#ff5964;
+}
+
+body{
+    font-family:Inter,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+}
+
+button,input{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+a{
+    text-decoration:none;
+    color:inherit;
+}
+
+
+/* =================================================
+   SIDEBAR
+================================================= */
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    bottom:0;
+    width:260px;
+
+    background:var(--sidebar);
+
+    border-right:1px solid var(--border);
+
+    padding:20px 13px;
+
+    z-index:1000;
+
+    overflow-y:auto;
+
+    transform:translateX(0);
+
+    transition:transform .3s ease;
+}
+
+.sidebar.closed{
+    transform:translateX(-100%);
+}
+
+
+/* LOGO */
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    padding:6px 12px 25px;
+
+    font-size:20px;
+    font-weight:800;
+}
+
+.logo-icon{
+    width:37px;
+    height:37px;
+
+    display:grid;
+    place-items:center;
+
+    border-radius:11px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--purple),
+            var(--blue)
+        );
+}
+
+.logo span{
+    color:#a99aff;
+}
+
+
+/* =================================================
+   MENU
+================================================= */
+
+.menu-title{
+    color:#555d6d;
+
+    font-size:10px;
+
+    font-weight:800;
+
+    letter-spacing:1.5px;
+
+    margin:18px 12px 7px;
+}
+
+.menu a,
+.logout-btn{
+
+    width:100%;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:11px;
+
+    padding:11px 12px;
+
+    color:#929aaa;
+
+    border:0;
+
+    background:transparent;
+
+    border-radius:10px;
+
+    margin-bottom:3px;
+
+    text-align:left;
+
+    transition:.2s;
+}
+
+.menu a:hover,
+.menu a.active,
+.logout-btn:hover{
+
+    background:#171a23;
+
+    color:#fff;
+}
+
+.menu-icon{
+    width:22px;
+    text-align:center;
+}
+
+
+/* =================================================
+   SUBMENU
+================================================= */
+
+.menu-parent{
+    position:relative;
+}
+
+.menu-parent>a{
+    padding-right:35px;
+}
+
+.arrow{
+    margin-left:auto;
+
+    font-size:10px;
+
+    transition:.25s;
+}
+
+.menu-parent.open .arrow{
+    transform:rotate(90deg);
+}
+
+.submenu{
+    display:none;
+
+    margin-left:25px;
+
+    border-left:1px solid #252a35;
+
+    padding-left:5px;
+}
+
+.menu-parent.open .submenu{
+    display:block;
+}
+
+.submenu a{
+    font-size:12px;
+
+    padding:9px 10px;
+
+    color:#727b8b;
+}
+
+.submenu a:hover{
+    color:#fff;
+}
+
+.logout-btn{
+    color:#ff6973;
+
+    margin-top:16px;
+}
+
+
+/* =================================================
+   OVERLAY
+================================================= */
+
+.sidebar-overlay{
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.65);
+
+    z-index:900;
+
+    display:none;
+}
+
+.sidebar-overlay.show{
+    display:block;
+}
+
+
+/* =================================================
+   MAIN
+================================================= */
+
+.main{
+    margin-left:260px;
+
+    min-height:100vh;
+
+    transition:margin-left .3s ease;
+}
+
+.main.expanded{
+    margin-left:0;
+}
+
+
+/* =================================================
+   TOPBAR
+================================================= */
+
+.topbar{
+    height:72px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:0 30px;
+
+    border-bottom:1px solid var(--border);
+
+    background:rgba(7,8,11,.88);
+
+    backdrop-filter:blur(15px);
+
+    position:sticky;
+
+    top:0;
+
+    z-index:500;
+}
+
+
+/* HAMBURGER */
+
+.hamburger{
+
+    width:42px;
+    height:42px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    border:1px solid var(--border);
+
+    background:#11141b;
+
+    color:#fff;
+
+    border-radius:10px;
+
+    font-size:23px;
+
+    transition:.2s;
+}
+
+.hamburger:hover{
+    background:#1a1e28;
+}
+
+.hamburger.active{
+    background:var(--purple);
+
+    border-color:var(--purple);
+}
+
+
+/* TOP RIGHT */
+
+.top-right{
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+}
+
+.notification{
+    width:38px;
+    height:38px;
+
+    display:grid;
+
+    place-items:center;
+
+    background:#11141b;
+
+    border:1px solid var(--border);
+
+    border-radius:10px;
+
+    position:relative;
+}
+
+.notification-dot{
+    position:absolute;
+
+    right:7px;
+    top:6px;
+
+    width:7px;
+    height:7px;
+
+    background:var(--red);
+
+    border-radius:50%;
+}
+
+.user{
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+}
+
+.avatar{
+    width:38px;
+    height:38px;
+
+    display:grid;
+
+    place-items:center;
+
+    border-radius:50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--purple),
+            var(--blue)
+        );
+
+    font-weight:800;
+}
+
+.user-info small{
+    display:block;
+
+    color:var(--muted);
+
+    font-size:10px;
+}
+
+
+/* =================================================
+   CONTENT
+================================================= */
+
+.content{
+    padding:30px;
+
+    max-width:1500px;
+
+    margin:auto;
+}
+
+.welcome{
+    margin-bottom:25px;
+}
+
+.welcome h1{
+    font-size:30px;
+
+    margin-bottom:5px;
+}
+
+.welcome p{
+    color:var(--muted);
+
+    font-size:14px;
+}
+
+
+/* =================================================
+   STATS
+================================================= */
+
+.cards{
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:15px;
+}
+
+.card{
+    background:
+        linear-gradient(
+            145deg,
+            #11141b,
+            #0d1015
+        );
+
+    border:1px solid var(--border);
+
+    border-radius:15px;
+
+    padding:20px;
+}
+
+.card-label{
+    color:var(--muted);
+
+    font-size:12px;
+
+    margin-bottom:10px;
+}
+
+.card-value{
+    font-size:25px;
+
+    font-weight:800;
+}
+
+.card-icon{
+    float:right;
+
+    width:38px;
+    height:38px;
+
+    display:grid;
+
+    place-items:center;
+
+    background:#181b25;
+
+    border-radius:10px;
+}
+
+.green{
+    color:var(--green);
+}
+
+.red{
+    color:var(--red);
+}
+
+.blue{
+    color:var(--blue);
+}
+
+
+/* =================================================
+   SECTION
+================================================= */
+
+.section{
+    margin-top:30px;
+}
+
+.section-header{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:15px;
+}
+
+.section-header h2{
+    font-size:18px;
+}
+
+
+/* =================================================
+   QUICK ACTIONS
+================================================= */
+
+.action-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:15px;
+}
+
+.action{
+
+    border:1px solid var(--border);
+
+    background:var(--card);
+
+    color:#fff;
+
+    border-radius:14px;
+
+    padding:18px;
+
+    text-align:left;
+
+    transition:.2s;
+}
+
+.action:hover{
+
+    transform:translateY(-3px);
+
+    border-color:#3a4050;
+}
+
+.action-icon{
+
+    font-size:25px;
+
+    margin-bottom:13px;
+}
+
+.action h3{
+
+    font-size:15px;
+
+    margin-bottom:5px;
+}
+
+.action p{
+
+    color:var(--muted);
+
+    font-size:12px;
+}
+
+
+/* =================================================
+   TWO COLUMN
+================================================= */
+
+.two-column{
+
+    display:grid;
+
+    grid-template-columns:
+        1.5fr 1fr;
+
+    gap:15px;
+}
+
+
+/* =================================================
+   PROJECT
+================================================= */
+
+.project{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:13px;
+
+    padding:16px 0;
+
+    border-bottom:1px solid var(--border);
+}
+
+.project:last-child{
+    border-bottom:0;
+}
+
+.project-icon{
+
+    width:42px;
+    height:42px;
+
+    display:grid;
+
+    place-items:center;
+
+    border-radius:11px;
+
+    background:#181c26;
+}
+
+.project-info{
+    flex:1;
+}
+
+.project-info strong{
+    display:block;
+
+    font-size:13px;
+}
+
+.project-info small{
+
+    color:var(--muted);
+
+    font-size:11px;
+}
+
+.status{
+
+    font-size:10px;
+
+    padding:5px 8px;
+
+    border-radius:20px;
+}
+
+.status.live{
+
+    color:var(--green);
+
+    background:
+        rgba(53,216,121,.08);
+}
+
+.status.stopped{
+
+    color:var(--red);
+
+    background:
+        rgba(255,89,100,.08);
+}
+
+
+/* =================================================
+   WALLET
+================================================= */
+
+.wallet{
+
+    background:
+
+        radial-gradient(
+            circle at 100% 0%,
+            rgba(118,92,255,.22),
+            transparent 45%
+        ),
+
+        linear-gradient(
+            145deg,
+            #11141c,
+            #0c0f14
+        );
+}
+
+.wallet-balance{
+
+    font-size:35px;
+
+    font-weight:900;
+
+    margin:12px 0 20px;
+}
+
+.wallet-buttons{
+
+    display:flex;
+
+    gap:8px;
+}
+
+.btn{
+
+    border:0;
+
+    padding:10px 14px;
+
+    border-radius:9px;
+
+    font-size:12px;
+
+    font-weight:700;
+}
+
+.btn-primary{
+
+    background:
+
+        linear-gradient(
+            135deg,
+            var(--purple),
+            #587cff
+        );
+
+    color:#fff;
+}
+
+.btn-secondary{
+
+    background:#191d27;
+
+    color:#fff;
+
+    border:1px solid var(--border);
+}
+
+.zero-warning{
+
+    margin-top:15px;
+
+    padding:13px;
+
+    border:1px solid
+        rgba(255,89,100,.25);
+
+    background:
+        rgba(255,89,100,.06);
+
+    color:#ff8b93;
+
+    border-radius:10px;
+
+    font-size:12px;
+}
+
+
+/* =================================================
+   MONITORING
+================================================= */
+
+.monitor{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:12px;
+}
+
+.metric{
+
+    padding:15px;
+
+    background:#0d1016;
+
+    border:1px solid var(--border);
+
+    border-radius:11px;
+}
+
+.metric-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    color:var(--muted);
+
+    font-size:11px;
+}
+
+.metric-value{
+
+    font-size:20px;
+
+    font-weight:800;
+
+    margin:8px 0;
+}
+
+.bar{
+
+    height:5px;
+
+    background:#20242d;
+
+    border-radius:10px;
+
+    overflow:hidden;
+}
+
+.bar span{
+
+    display:block;
+
+    height:100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--purple),
+            var(--blue)
+        );
+}
+
+
+/* =================================================
+   HOME FEATURE GRID
+================================================= */
+
+.feature-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:12px;
+}
+
+.feature{
+
+    display:block;
+
+    padding:18px;
+
+    background:#0e1117;
+
+    border:1px solid var(--border);
+
+    border-radius:13px;
+
+    transition:.2s;
+}
+
+.feature:hover{
+
+    transform:translateY(-3px);
+
+    border-color:#3b4252;
+
+    background:#131720;
+}
+
+.feature-icon{
+
+    font-size:24px;
+
+    margin-bottom:10px;
+}
+
+.feature strong{
+
+    display:block;
+
+    font-size:13px;
+
+    margin-bottom:5px;
+}
+
+.feature small{
+
+    color:var(--muted);
+
+    font-size:11px;
+
+    line-height:1.5;
+}
+
+
+/* =================================================
+   MOBILE BOTTOM NAV
+================================================= */
+
+.bottom-nav{
+    display:none;
+}
+
+
+/* =================================================
+   RESPONSIVE
+================================================= */
+
+@media(max-width:1100px){
+
+    .cards{
+
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+    .two-column{
+
+        grid-template-columns:1fr;
+    }
+
+    .feature-grid{
+
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+}
+
+
+@media(max-width:800px){
+
+    .sidebar{
+
+        transform:
+            translateX(-100%);
+    }
+
+    .sidebar.open{
+
+        transform:
+            translateX(0);
+    }
+
+    .main{
+
+        margin-left:0;
+    }
+
+    .main.expanded{
+
+        margin-left:0;
+    }
+
+    .topbar{
+
+        padding:0 18px;
+    }
+
+    .content{
+
+        padding:
+            22px 16px 90px;
+    }
+
+    .action-grid{
+
+        grid-template-columns:1fr;
+    }
+
+    .feature-grid{
+
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+    .bottom-nav{
+
+        position:fixed;
+
+        display:flex;
+
+        left:10px;
+        right:10px;
+        bottom:10px;
+
+        height:62px;
+
+        background:#11141b;
+
+        border:1px solid var(--border);
+
+        border-radius:16px;
+
+        z-index:200;
+
+        justify-content:space-around;
+
+        align-items:center;
+
+        box-shadow:
+            0 15px 50px #000;
+    }
+
+    .bottom-nav a{
+
+        color:#7f8796;
+
+        text-align:center;
+
+        font-size:10px;
+    }
+
+    .bottom-nav a.active{
+
+        color:#fff;
+    }
+
+    .bottom-nav span{
+
+        display:block;
+
+        font-size:18px;
+    }
+}
+
+
+@media(max-width:500px){
+
+    .cards{
+
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+    .card{
+
+        padding:15px;
+    }
+
+    .card-value{
+
+        font-size:19px;
+    }
+
+    .card-icon{
+
+        display:none;
+    }
+
+    .welcome h1{
+
+        font-size:25px;
+    }
+
+    .wallet-balance{
+
+        font-size:28px;
+    }
+
+    .monitor{
+
+        grid-template-columns:1fr;
+    }
+
+    .user-info{
+
+        display:none;
+    }
+}
+</style>
+</head>
+
+<body>
+
+
+<!-- =================================================
+     SIDEBAR
+================================================= -->
+
+<aside
+    class="sidebar"
+    id="sidebar">
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            H
+        </div>
+
+        <div>
+            Humble<span>Hosting</span>
+        </div>
+
+    </div>
+
+
+    <div class="menu">
+
+
+        <div class="menu-title">
+            MAIN
+        </div>
+
+
+        <a
+            href="dashboard.html"
+            class="active">
+
+            <span class="menu-icon">🏠</span>
+
+            Home
+
+        </a>
+
+
+        <!-- PROJECTS -->
+
+        <div class="menu-parent">
+
+            <a
+                href="#"
+                onclick="toggleMenu(event,this)">
+
+                <span class="menu-icon">🚀</span>
+
+                Projects
+
+                <span class="arrow">▶</span>
+
+            </a>
+
+            <div class="submenu">
+
+                <a href="projects.html">
+                    All Projects
+                </a>
+
+                <a href="deploy.html">
+                    Deploy Project
+                </a>
+
+                <a href="github.html">
+                    GitHub Deploy
+                </a>
+
+                <a href="deployments.html">
+                    Deployments
+                </a>
+
+                <a href="environment.html">
+                    Environment Variables
+                </a>
+
+                <a href="logs.html">
+                    Logs
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- BOT HOSTING -->
+
+        <div class="menu-parent">
+
+            <a
+                href="#"
+                onclick="toggleMenu(event,this)">
+
+                <span class="menu-icon">🤖</span>
+
+                Bot Hosting
+
+                <span class="arrow">▶</span>
+
+            </a>
+
+            <div class="submenu">
+
+                <a href="bots.html">
+                    My Bots
+                </a>
+
+                <a href="whatsapp.html">
+                    WhatsApp Bots
+                </a>
+
+                <a href="telegram.html">
+                    Telegram Bots
+                </a>
+
+                <a href="discord.html">
+                    Discord Bots
+                </a>
+
+                <a href="bot-deploy.html">
+                    Deploy Bot
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- DOMAINS -->
+
+        <div class="menu-parent">
+
+            <a
+                href="#"
+                onclick="toggleMenu(event,this)">
+
+                <span class="menu-icon">🌐</span>
+
+                Domains
+
+                <span class="arrow">▶</span>
+
+            </a>
+
+            <div class="submenu">
+
+                <a href="domains.html">
+                    My Domains
+                </a>
+
+                <a href="add-domain.html">
+                    Add Domain
+                </a>
+
+                <a href="dns.html">
+                    DNS
+                </a>
+
+                <a href="ssl.html">
+                    SSL
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- MONITORING -->
+
+        <div class="menu-parent">
+
+            <a
+                href="#"
+                onclick="toggleMenu(event,this)">
+
+                <span class="menu-icon">📊</span>
+
+                Monitoring
+
+                <span class="arrow">▶</span>
+
+            </a>
+
+            <div class="submenu">
+
+                <a href="monitoring.html">
+                    Overview
+                </a>
+
+                <a href="cpu.html">
+                    CPU
+                </a>
+
+                <a href="ram.html">
+                    RAM
+                </a>
+
+                <a href="storage.html">
+                    Storage
+                </a>
+
+                <a href="network.html">
+                    Network
+                </a>
+
+                <a href="uptime.html">
+                    Uptime
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- DEPLOYMENTS -->
+
+        <div class="menu-parent">
+
+            <a
+                href="#"
+                onclick="toggleMenu(event,this)">
+
+                <span class="menu-icon">📜</span>
+
+                Deployments
+
+                <span class="arrow">▶</span>
+
+            </a>
+
+            <div class="submenu">
+
+                <a href="deployment-history.html">
+                    Deployment History
+                </a>
+
+                <a href="build-logs.html">
+                    Build Logs
+                </a>
+
+                <a href="runtime-logs.html">
+                    Runtime Logs
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- WALLET -->
+
+        <div class="menu-parent">
+
+            <a
+                href="#"
+                onclick="toggleMenu(event,this)">
+
+                <span class="menu-icon">💰</span>
+
+                Wallet
+
+                <span class="arrow">▶</span>
+
+            </a>
+
+            <div class="submenu">
+
+                <a href="wallet.html">
+                    Balance
+                </a>
+
+                <a href="deposit.html">
+                    Deposit
+                </a>
+
+                <a href="withdraw.html">
+                    Withdraw
+                </a>
+
+                <a href="transactions.html">
+                    Transactions
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="menu-title">
+            ACCOUNT
+        </div>
+
+
+        <a href="notifications.html">
+
+            <span class="menu-icon">🔔</span>
+
+            Notifications
+
+        </a>
+
+
+        <a href="profile.html">
+
+            <span class="menu-icon">👤</span>
+
+            Profile
+
+        </a>
+
+
+        <a href="api-keys.html">
+
+            <span class="menu-icon">🔑</span>
+
+            API Keys
+
+        </a>
+
+
+        <a href="security.html">
+
+            <span class="menu-icon">🔐</span>
+
+            Security
+
+        </a>
+
+
+        <a href="settings.html">
+
+            <span class="menu-icon">⚙️</span>
+
+            Settings
+
+        </a>
+
+
+        <button
+            class="logout-btn"
+            onclick="logout()">
+
+            <span class="menu-icon">🚪</span>
+
+            Logout
+
+        </button>
+
+    </div>
+
+</aside>
+
+
+<!-- OVERLAY -->
+
+<div
+    class="sidebar-overlay"
+    id="sidebarOverlay">
+</div>
+
+
+<!-- =================================================
+     MAIN
+================================================= -->
+
+<div
+    class="main"
+    id="main">
+
+
+    <!-- TOPBAR -->
+
+    <header class="topbar">
+
+        <button
+            type="button"
+            class="hamburger"
+            id="hamburger">
+
+            ☰
+
+        </button>
+
+
+        <div></div>
+
+
+        <div class="top-right">
+
+            <div class="notification">
