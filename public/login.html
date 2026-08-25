@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Login — Humble Hosting</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+:root{
+    --bg:#07080b;
+    --card:#0f1218;
+    --border:#252a35;
+    --text:#f5f7fb;
+    --muted:#8d95a5;
+    --purple:#765cff;
+    --blue:#28cfff;
+    --green:#35d879;
+    --red:#ff5964;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:25px 15px;
+
+    font-family:Inter,Arial,sans-serif;
+
+    color:var(--text);
+
+    background:
+        radial-gradient(
+            circle at 15% 20%,
+            rgba(118,92,255,.15),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 85% 80%,
+            rgba(40,207,255,.10),
+            transparent 30%
+        ),
+        var(--bg);
+}
+
+button,
+input{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+a{
+    text-decoration:none;
+    color:inherit;
+}
+
+
+/* ================= CONTAINER ================= */
+
+.auth-container{
+    width:100%;
+    max-width:450px;
+}
+
+
+/* ================= BRAND ================= */
+
+.brand{
+    text-align:center;
+    margin-bottom:22px;
+}
+
+.logo{
+    width:58px;
+    height:58px;
+
+    margin:0 auto 13px;
+
+    display:grid;
+    place-items:center;
+
+    border-radius:16px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--purple),
+            var(--blue)
+        );
+
+    font-size:28px;
+    font-weight:900;
+
+    box-shadow:
+        0 12px 40px
+        rgba(118,92,255,.25);
+}
+
+.brand h1{
+    font-size:25px;
+    font-weight:850;
+}
+
+.brand h1 span{
+    color:#a99aff;
+}
+
+.brand p{
+    color:var(--muted);
+    font-size:13px;
+    margin-top:5px;
+}
+
+
+/* ================= CARD ================= */
+
+.auth-card{
+    background:
+        linear-gradient(
+            145deg,
+            rgba(17,20,27,.98),
+            rgba(11,14,19,.98)
+        );
+
+    border:1px solid var(--border);
+
+    border-radius:20px;
+
+    padding:28px;
+
+    box-shadow:
+        0 25px 80px rgba(0,0,0,.45);
+}
+
+.auth-card h2{
+    font-size:22px;
+    margin-bottom:6px;
+}
+
+.subtitle{
+    color:var(--muted);
+    font-size:13px;
+    margin-bottom:22px;
+}
+
+
+/* ================= MESSAGE ================= */
+
+.message{
+    display:none;
+
+    margin-bottom:15px;
+
+    padding:11px 13px;
+
+    border-radius:9px;
+
+    font-size:12px;
+}
+
+.message.error{
+    display:block;
+    color:#ff858d;
+    background:rgba(255,89,100,.07);
+    border:1px solid rgba(255,89,100,.20);
+}
+
+.message.success{
+    display:block;
+    color:#68e99a;
+    background:rgba(53,216,121,.07);
+    border:1px solid rgba(53,216,121,.20);
+}
+
+
+/* ================= SOCIAL ================= */
+
+.social-buttons{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.social-btn{
+    height:48px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+
+    border:1px solid var(--border);
+    border-radius:10px;
+
+    background:#151820;
+    color:#fff;
+
+    font-weight:700;
+
+    transition:.2s;
+}
+
+.social-btn:hover{
+    background:#1b1f29;
+    border-color:#3a4050;
+    transform:translateY(-1px);
+}
+
+.social-logo{
+    width:20px;
+    height:20px;
+}
+
+.github-logo{
+    fill:#fff;
+}
+
+
+/* ================= DIVIDER ================= */
+
+.divider{
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    margin:22px 0;
+
+    color:#646c7b;
+
+    font-size:11px;
+}
+
+.divider::before,
+.divider::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--border);
+}
+
+
+/* ================= FORM ================= */
+
+.form-group{
+    margin-bottom:16px;
+}
+
+.form-group label{
+    display:block;
+
+    color:#dce0e8;
+
+    font-size:12px;
+    font-weight:700;
+
+    margin-bottom:7px;
+}
+
+.input-wrap{
+    position:relative;
+}
+
+.input{
+    width:100%;
+    height:48px;
+
+    padding:0 13px;
+
+    border:1px solid var(--border);
+    border-radius:10px;
+
+    outline:none;
+
+    background:#0b0e13;
+    color:#fff;
+
+    font-size:13px;
+
+    transition:.2s;
+}
+
+.input:focus{
+    border-color:var(--purple);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(118,92,255,.10);
+}
+
+.input::placeholder{
+    color:#555d6d;
+}
+
+.password-input{
+    padding-right:48px;
+}
+
+.password-toggle{
+    position:absolute;
+
+    right:5px;
+    top:5px;
+
+    width:38px;
+    height:38px;
+
+    border:0;
+    border-radius:8px;
+
+    background:transparent;
+    color:#7d8594;
+}
+
+.password-toggle:hover{
+    background:#171b23;
+    color:#fff;
+}
+
+
+/* ================= OPTIONS ================= */
+
+.options{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    margin:-3px 0 18px;
+
+    font-size:11px;
+}
+
+.remember{
+    display:flex;
+    align-items:center;
+    gap:7px;
+
+    color:var(--muted);
+}
+
+.remember input{
+    accent-color:var(--purple);
+}
+
+.forgot{
+    color:#a99aff;
+    font-weight:700;
+}
+
+.forgot:hover{
+    text-decoration:underline;
+}
+
+
+/* ================= LOGIN BUTTON ================= */
+
+.login-btn{
+    width:100%;
+    height:49px;
+
+    border:0;
+    border-radius:10px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--purple),
+            #587cff
+        );
+
+    color:#fff;
+
+    font-size:13px;
+    font-weight:800;
+
+    box-shadow:
+        0 10px 30px
+        rgba(118,92,255,.20);
+
+    transition:.2s;
+}
+
+.login-btn:hover{
+    transform:translateY(-1px);
+
+    box-shadow:
+        0 14px 35px
+        rgba(118,92,255,.30);
+}
+
+.login-btn:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+    transform:none;
+}
+
+
+/* ================= REGISTER ================= */
+
+.register-link{
+    text-align:center;
+
+    margin-top:20px;
+
+    color:var(--muted);
+
+    font-size:12px;
+}
+
+.register-link a{
+    color:#a99aff;
+    font-weight:800;
+}
+
+.register-link a:hover{
+    text-decoration:underline;
+}
+
+
+/* ================= SECURITY ================= */
+
+.security{
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    gap:7px;
+
+    margin-top:17px;
+
+    color:#626a79;
+
+    font-size:10px;
+}
+
+
+/* ================= MOBILE ================= */
+
+@media(max-width:500px){
+
+    body{
+        padding:18px 12px;
+    }
+
+    .auth-card{
+        padding:22px 18px;
+        border-radius:17px;
+    }
+
+    .social-buttons{
+        grid-template-columns:1fr;
+    }
+
+    .brand h1{
+        font-size:23px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="auth-container">
+
+    <!-- BRAND -->
+
+    <div class="brand">
+
+        <div class="logo">
+            H
+        </div>
+
+        <h1>
+            Humble<span>Hosting</span>
+        </h1>
+
+        <p>
+            Simple, powerful hosting for developers.
+        </p>
+
+    </div>
+
+
+    <!-- LOGIN CARD -->
+
+    <div class="auth-card">
+
+        <h2>
+            Welcome back
+        </h2>
+
+        <p class="subtitle">
+            Sign in to manage your hosting.
+        </p>
+
+
+        <!-- MESSAGE -->
+
+        <div
+            id="message"
+            class="message">
+        </div>
+
+
+        <!-- GOOGLE + GITHUB -->
+
+        <div class="social-buttons">
+
+            <!-- GOOGLE -->
+
+            <button
+                type="button"
+                class="social-btn"
+                onclick="continueWithGoogle()">
+
+                <svg
+                    class="social-logo"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true">
+
+                    <path
+                        fill="#4285F4"
+                        d="M21.35 12.27c0-.71-.06-1.4-.18-2.05H12v3.88h5.24a4.48 4.48 0 0 1-1.94 2.94v2.44h3.14c1.84-1.69 2.91-4.18 2.91-7.21z"/>
+
+                    <path
+                        fill="#34A853"
+                        d="M12 21.5c2.63 0 4.84-.87 6.45-2.36l-3.14-2.44c-.87.58-1.98.93-3.31.93-2.54 0-4.69-1.72-5.46-4.03H3.3v2.52A9.74 9.74 0 0 0 12 21.5z"/>
+
+                    <path
+                        fill="#FBBC05"
+                        d="M6.54 13.6a5.86 5.86 0 0 1 0-3.2V7.88H3.3a9.73 9.73 0 0 0 0 8.24l3.24 2.52z"/>
+
+                    <path
+                        fill="#EA4335"
+                        d="M12 6.37c1.43 0 2.72.49 3.73 1.46l2.8-2.8C16.84 3.47 14.63 2.5 12 2.5a9.74 9.74 0 0 0-8.7 5.38l3.24 2.52C7.31 8.09 9.46 6.37 12 6.37z"/>
+
+                </svg>
+
+                Google
+
+            </button>
+
+
+            <!-- GITHUB -->
+
+            <button
+                type="button"
+                class="social-btn"
+                onclick="continueWithGitHub()">
+
+                <svg
+                    class="social-logo github-logo"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true">
+
+                    <path
+                        d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55v-2.12c-3.2.7-3.87-1.36-3.87-1.36-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.67 1.25 3.32.95.1-.74.4-1.25.72-1.54-2.55-.29-5.23-1.28-5.23-5.69 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.47.11-3.06 0 0 .96-.31 3.15 1.18a10.9 10.9 0 0 1 5.74 0c2.19-1.49 3.15-1.18 3.15-1.18.62 1.59.23 2.77.11 3.06.73.81 1.18 1.84 1.18 3.1 0 4.42-2.69 5.39-5.25 5.67.41.35.77 1.04.77 2.1v3.11c0 .3.2.65.79.54C20.21 21.38 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/>
+
+                </svg>
+
+                GitHub
+
+            </button>
+
+        </div>
+
+
+        <!-- DIVIDER -->
+
+        <div class="divider">
+            OR CONTINUE WITH EMAIL
+        </div>
+
+
+        <!-- LOGIN FORM -->
+
+        <form id="loginForm">
+
+            <div class="form-group">
+
+                <label for="email">
+                    Email Address
+                </label>
+
+                <input
+                    class="input"
+                    id="email"
+                    type="email"
+                    placeholder="you@example.com"
+                    autocomplete="email"
+                    required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <div class="input-wrap">
+
+                    <input
+                        class="input password-input"
+                        id="password"
+                        type="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required>
+
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        onclick="togglePassword()"
+                        aria-label="Show password">
+
+                        👁
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="options">
+
+                <label class="remember">
+
+                    <input
+                        type="checkbox"
+                        id="remember">
+
+                    Remember me
+
+                </label>
+
+
+                <a
+                    href="forgot-password.html"
+                    class="forgot">
+
+                    Forgot password?
+
+                </a>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="login-btn"
+                id="loginBtn">
+
+                Sign In
+
+            </button>
+
+        </form>
+
+
+        <div class="register-link">
+
+            Don't have an account?
+
+            <a href="register.html">
+                Create account
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="security">
+        🔒 Secure authentication
+    </div>
+
+</div>
+
+
+<script>
+
+/* =================================================
+   API CONFIG
+================================================= */
+
+/*
+   If frontend and backend are on the
+   same domain, leave this empty.
+
+   If backend is separate, use:
+
+   const API_URL =
+   "https://your-api-domain.com";
+*/
+
+const API_URL = "";
+
+
+/* =================================================
+   MESSAGE
+================================================= */
+
+function showMessage(text,type){
+
+    const message =
+        document.getElementById("message");
+
+    message.textContent = text;
+
+    message.className =
+        "message " + type;
+}
+
+
+/* =================================================
+   PASSWORD
+================================================= */
+
+function togglePassword(){
+
+    const input =
+        document.getElementById("password");
+
+    const button =
+        document.querySelector(".password-toggle");
+
+    if(input.type === "password"){
+
+        input.type = "text";
+
+        button.textContent = "🙈";
+
+    }else{
+
+        input.type = "password";
+
+        button.textContent = "👁";
+
+    }
+}
+
+
+/* =================================================
+   EMAIL LOGIN
+================================================= */
+
+document
+.getElementById("loginForm")
+.addEventListener("submit",async function(event){
+
+    event.preventDefault();
+
+
+    const email =
+        document
+        .getElementById("email")
+        .value
+        .trim()
+        .toLowerCase();
+
+
+    const password =
+        document
+        .getElementById("password")
+        .value;
+
+
+    const remember =
+        document
+        .getElementById("remember")
+        .checked;
+
+
+    const button =
+        document.getElementById("loginBtn");
+
+
+    if(!email || !password){
+
+        showMessage(
+            "Please enter your email and password.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    button.disabled = true;
+
+    button.textContent =
+        "Signing in...";
+
+
+    try{
+
+        const response =
+            await fetch(
+                `${API_URL}/api/auth/login`,
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+                        email,
+                        password
+                    })
+                }
+            );
+
+
+        const data =
+            await response
+            .json()
+            .catch(()=>({}));
+
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "Invalid email or password."
+            );
+
+        }
+
+
+        /*
+          Save authentication token.
+        */
+
+        if(data.token){
+
+            const storage =
+                remember
+                ? localStorage
+                : sessionStorage;
+
+            storage.setItem(
+                "token",
+                data.token
+            );
+
+        }
+
+
+        /*
+          Save user information.
+        */
+
+        if(data.user){
+
+            const storage =
+                remember
+                ? localStorage
+                : sessionStorage;
+
+            storage.setItem(
+                "user",
+                JSON.stringify(data.user)
+            );
+
+        }
+
+
+        showMessage(
+            "Login successful. Opening dashboard...",
+            "success"
+        );
+
+
+        setTimeout(function(){
+
+            window.location.href =
+                "dashboard.html";
+
+        },700);
+
+
+    }catch(error){
+
+        showMessage(
+            error.message ||
+            "Unable to sign in.",
+            "error"
+        );
+
+
+    }finally{
+
+        button.disabled = false;
+
+        button.textContent =
+            "Sign In";
+
+    }
+
+});
+
+
+/* =================================================
+   GOOGLE LOGIN
+================================================= */
+
+function continueWithGoogle(){
+
+    window.location.href =
+        `${API_URL}/api/auth/google`;
+
+}
+
+
+/* =================================================
+   GITHUB LOGIN
+================================================= */
+
+function continueWithGitHub(){
+
+    window.location.href =
+        `${API_URL}/api/auth/github`;
+
+}
+
+</script>
+
+</body>
+</html>
